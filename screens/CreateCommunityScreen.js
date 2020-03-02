@@ -35,19 +35,19 @@ export default class CreateCommunityScreen extends React.Component {
     }
     //componentDidMount() {this.listenForRooms(this.roomsRef);}
     listenForRooms2 = (roomsRef) => {
-        roomsRef.startAt(this.state.search)
-        //.startAt(`%${this.state.search}%`)
-                                        .endAt(this.state.search+"\uf8ff")
-                                        .on('value', (dataSnapshot) => {
-                                            var roomsFB = [];
-                                            dataSnapshot.forEach((child) => {
-                                                roomsFB.push({
-                                                    name: child.val().name,
-                                                    key: child.key
-                                                });
-                                            });
-                                            this.setState({ users: roomsFB });
-                                        });
+        roomsRef
+        .startAt(this.state.search)
+        .endAt(this.state.search+"\uf8ff")
+        .on('value', (dataSnapshot) => {
+            var roomsFB = [];
+            dataSnapshot.forEach((child) => {
+                roomsFB.push({
+                    name: child.val().name,
+                    key: child.key
+                });
+            });
+            this.setState({ users: roomsFB });
+        });
     }
     listenForRooms(roomsRef) {
         roomsRef.on('value', (dataSnapshot) => {

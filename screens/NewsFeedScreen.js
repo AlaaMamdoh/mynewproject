@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground,ScrollView , TextInput, FlatList } from 'react-native';
-import { Ionicons, FontAwesome, Octicons } from '@expo/vector-icons';
-import { Avatar, Divider, Icon } from 'react-native-elements';
+import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, TextInput, FlatList } from 'react-native'
+import {SearchBar, Icon} from 'react-native-elements'
 import Post from './Post'
 import * as firebase from 'firebase'
+
 var firebaseConfig = {
     apiKey: "AIzaSyABjDdiaYm83rEkUsEG-u5aeegZrhNDSKs",
     authDomain: "family-social-communicat-b54bb.firebaseapp.com",
@@ -15,96 +15,61 @@ var firebaseConfig = {
 };
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
-
-export default class CreateCommunityScreen extends React.Component {
+export default class NewsFeedScreen extends React.Component {
     state = {
-        communityDetails: {},
-        postTxt:'',
-        newPostDetails:{},
-        posts: [],
-        postMakingUserName:'',
+        search: '',
+        postsList:[],
     }
-    componentDidMount(){this.listenForCommunityAndPosts()}
-    postmaker = (userId) => {
-        alert("postmaker")
-        
-    }
-    
-    userFullName = ''
-    listenForCommunityAndPosts = () =>  {
-
-            firebase.database().ref('posts').orderByChild('communityKey')
-            .equalTo('-M07uNj9HbQxc_ich644')
-            .on('value', (dataSnapshot) =>{
-                let promises = [];
-                dataSnapshot.forEach((child) => {
-                    var userId = child.val().user
-                    let userRef = firebase.database().ref('authenticatedUsers').child(userId);
-                    promises.push(userRef.child('fullName').once('value'));
-                })
-                Promise.all(promises).then((snapshots) => {
-                    return snapshots.map((userNameSnapshot) => userNameSnapshot.val());
-                })
-                .then((userNames) => {
-                    let postsList = [];
-                    let index = 0;
-                    dataSnapshot.forEach((child) => {
-                        postsList.push({
-                            image: child.val().image,
-                            text: child.val().text,
-                            user: userNames[index],
-                            likesNumber: child.val().likesNumber,
-                            commentsNumber: child.val().commentsNumber,
-                            postKey: child.key,
-                            userKey: child.val().user
-                        })
-                        index = index + 1;
-                    });
-
-                    this.setState({ posts: postsList })
+    componentDidMount() {
+        firebase.database().ref('posts').child('-M0aeUVj1gSm6wpsAM2T').on('value', snap => {
+            var posts = []
+            snap.forEach(child => {
+                posts.push({
+                    key: child.key,
+                    timestamp: child.val().timestamp,
+                    text: child.val().text,
+                    image: child.val().image,
+                    likesNumber: child.val().likesNumber,
+                    commentsNumber: child.val().commentsNumber,
+                    //user: child.val().user
                 })
             })
-        }
-    
-    render() {
+            this.setState({postsList: posts })
+        })
+    }
+    render(){
         const renderPost = (item) =>(
             <View>
                 <Post 
-                    userName= {item.user}//{item.user}
+                    userName= 'lol'//{item.user}//{item.user}
                     userAvatar = 'https:placehold.it/150'
                     postText={item.text}
                     likesNumber={item.likesNumber}
                     CommentsNumber={item.commentsNumber}
                     postKey={item.postKey}
                 />
-            </View>)
-        return (
-
+            </View>
+        )
+        return(
             <View style={{ borderWidth: 1, borderColor: 'blue', flex: 1 }}>
                 <View style={styles.communityBgImgContainer}>
-                    <ImageBackground 
-                        source={{ uri: this.state.communityDetails.communityBackgroundImg }}
-                        style={styles.communityBgImg}
-                    >
-                    </ImageBackground>
+                    <SearchBar
+                        lightTheme
+                        containerStyle={{ backgroundColor: '#FFF' }}
+                        inputContainerStyle={{ backgroundColor: '#DDD' }}
+                        placeholder="Search a Member"
+                        value={this.state.search}
+                        onChangeText ={
+                            alert('search')
+                        } 
+                    />
                 </View>
                 <View style={{ borderWidth: 1, borderColor: 'red', flex: 1 }}>
-                    <View style={styles.communityImgContainer}>
-                        <TouchableOpacity style={{marginTop: -70}}>
-                            <Avatar
-                                rounded
-                                size={130}
-                                source={{ uri: this.state.communityDetails.communityImage }}
-                            />
-                        </TouchableOpacity>
-                        <Text style={styles.communityNameTxtInput}>{this.state.communityDetails.name}</Text>
-                        <Text style={styles.communityDisTxtInput}>{this.state.communityDetails.discription}</Text>
-                    </View>
                     <View>
                         <FlatList
                             style={{ padding: 6, borderWidth: 1,borderColor: 'orange', marginTop: 5, marginBottom: 120}}
-                            data={this.state.posts}
-                            keyExtractor={(item) => item.id}
+                            data={this.state.postsList}
+                            keyExtractor={(item) => item.key}
                             renderItem={({ item }) => renderPost(item)}
                         />
                     </View>
