@@ -200,6 +200,7 @@ export default class Post extends React.Component {
             return
         })
     }
+    editPost = () =>{this.props.navigation.navigate('EditPost' , {postKey: this.props.postKey})}
     render() {
         //console.log(this.state.likers)
         const renderComment = (item) => (
@@ -247,7 +248,7 @@ export default class Post extends React.Component {
         )
         return (
             <View style={{ marginBottom: 10 }}>
-                <TouchableOpacity onPress={this.deletePost} style={{position: 'absolute', right:15, top:15}}>
+                <TouchableOpacity onPress={this.editPost} style={{position: 'absolute', right:15, top:15}}>
                     <Icon name='ellipsis-v' type='font-awesome' size={20} color='#555' />
                 </TouchableOpacity>
                 <View style={styles.post}>
@@ -259,7 +260,7 @@ export default class Post extends React.Component {
                         />
                         <Text style={styles.userName}>{this.props.userName}</Text>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() =>{this.props.navigation.navigate('EditPost' , {communityKey: this.props.communityKey ,postKey: this.props.postKey , postText : this.props.postText})}}>
                         <Text style={styles.postText}>{this.props.postText}</Text>
                     </TouchableOpacity>
                 </View>

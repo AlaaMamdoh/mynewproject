@@ -6,9 +6,10 @@ import { createStackNavigator } from "react-navigation-stack";
 //import AddMembersScreen from './screens/AddMembersScreen'
 import CommunityOverViewScreen from './screens/CommunityOverViewScreen'
 import CreateNewPostScreen from './screens/CreateNewPostScreen'
+import EditPostScreen from './screens/EditPostScreen'
 //import CommunitesList from './screens/CommunitesList'
 //import StackAuthentication from './screens/Authentication/StackAuthentication'
-//import NewsFeedScreen from './screens/NewsFeedScreen'
+import NewsFeedScreen from './screens/NewsFeedScreen'
 //import StackRooms from './screens/Rooms/StackRooms'
 //import StackRooms from './screens/Rooms/StackRooms'
 const AppNavigator = createStackNavigator(
@@ -21,7 +22,8 @@ const AppNavigator = createStackNavigator(
         //CreateCommunity : CreateCommunityScreen,
         //NewsFeed: NewsFeedScreen,
         CommunityOverView : CommunityOverViewScreen,
-        CreateNewPost : CreateNewPostScreen
+        CreateNewPost : CreateNewPostScreen,
+        EditPost : EditPostScreen
     },
 );
 

@@ -30,41 +30,39 @@ export default class CreateCommunityScreen extends React.Component {
         
     }
     
-    userFullName = ''
     listenForCommunityAndPosts = () =>  {
-
-            firebase.database().ref('posts').orderByChild('communityKey')
-            .equalTo('-M07uNj9HbQxc_ich644')
-            .on('value', (dataSnapshot) =>{
-                let promises = [];
-                dataSnapshot.forEach((child) => {
-                    var userId = child.val().user
-                    let userRef = firebase.database().ref('authenticatedUsers').child(userId);
-                    promises.push(userRef.child('fullName').once('value'));
-                })
-                Promise.all(promises).then((snapshots) => {
-                    return snapshots.map((userNameSnapshot) => userNameSnapshot.val());
-                })
-                .then((userNames) => {
-                    let postsList = [];
-                    let index = 0;
-                    dataSnapshot.forEach((child) => {
-                        postsList.push({
-                            image: child.val().image,
-                            text: child.val().text,
-                            user: userNames[index],
-                            likesNumber: child.val().likesNumber,
-                            commentsNumber: child.val().commentsNumber,
-                            postKey: child.key,
-                            userKey: child.val().user
-                        })
-                        index = index + 1;
-                    });
-
-                    this.setState({ posts: postsList })
-                })
+        firebase.database().ref('posts').orderByChild('communityKey')
+        .equalTo('-M0lO8LPYwPdDsdrSvMJ')
+        .on('value', (dataSnapshot) =>{
+            let promises = [];
+            dataSnapshot.forEach((child) => {
+                var userId = child.val().user
+                let userRef = firebase.database().ref('authenticatedUsers').child(userId);
+                promises.push(userRef.child('fullName').once('value'));
             })
-        }
+            Promise.all(promises).then((snapshots) => {
+                return snapshots.map((userNameSnapshot) => userNameSnapshot.val());
+            })
+            .then((userNames) => {
+                let postsList = [];
+                let index = 0;
+                dataSnapshot.forEach((child) => {
+                    postsList.push({
+                        image: child.val().image,
+                        text: child.val().text,
+                        user: userNames[index],
+                        likesNumber: child.val().likesNumber,
+                        commentsNumber: child.val().commentsNumber,
+                        postKey: child.key,
+                        userKey: child.val().user
+                    })
+                    index = index + 1;
+                });
+
+                this.setState({ posts: postsList })
+            })
+        })
+    }
     
     render() {
         const renderPost = (item) =>(
@@ -76,6 +74,8 @@ export default class CreateCommunityScreen extends React.Component {
                     likesNumber={item.likesNumber}
                     CommentsNumber={item.commentsNumber}
                     postKey={item.postKey}
+                    navigation = {this.props.navigation}
+                    communityKey =  '-M07uNj9HbQxc_ich644'/*{this.props.navigation.getParam("communityKey")}*/
                 />
             </View>)
         return (

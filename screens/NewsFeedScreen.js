@@ -18,58 +18,70 @@ var firebaseConfig = {
 export default class NewsFeedScreen extends React.Component {
     state = {
         search: '',
-        postsList:[],
+        posts:[],
     }
-    componentDidMount() {
-        firebase.database().ref('posts').child('-M0aeUVj1gSm6wpsAM2T').on('value', snap => {
-            var posts = []
-            snap.forEach(child => {
-                posts.push({
-                    key: child.key,
-                    timestamp: child.val().timestamp,
-                    text: child.val().text,
-                    image: child.val().image,
-                    likesNumber: child.val().likesNumber,
-                    commentsNumber: child.val().commentsNumber,
-                    //user: child.val().user
-                })
+    componentDidMount() {this.listenForPosts()}
+    listenForPosts = () =>  {
+        firebase.database().ref('posts')
+        .on('value', (dataSnapshot) =>{
+            let userFullName = [];
+            let communityName = [];
+            dataSnapshot.forEach((child) => {
+                var userId = child.val().user
+                var communityId = child.val().communityKey
+                let userRef = firebase.database().ref('authenticatedUsers').child(userId);
+                let communityRef = firebase.database().ref('communities').child(communityId);
+                userFullName.push(userRef.child('fullName').once('value'));
+                communityName.push(communityRef.child('name').once('value'));
             })
-            this.setState({postsList: posts })
+            Promise.all(userFullName).then((snapshots) => {
+                return snapshots.map((userNameSnapshot) => userNameSnapshot.val());
+            })
+            .then((userNames) => {
+                let postsList = [];
+                let index = 0;
+                dataSnapshot.forEach((child) => {
+                    postsList.push({
+                        image: child.val().image,
+                        text: child.val().text,
+                        user: userNames[index],
+                        likesNumber: child.val().likesNumber,
+                        commentsNumber: child.val().commentsNumber,
+                        postKey: child.key,
+                        userKey: child.val().user
+                    })
+                    index = index + 1;
+                });
+
+                this.setState({ posts: postsList })
+            })
         })
     }
+
     render(){
         const renderPost = (item) =>(
             <View>
                 <Post 
-                    userName= 'lol'//{item.user}//{item.user}
+                    userName= {item.user}//{item.user}
                     userAvatar = 'https:placehold.it/150'
                     postText={item.text}
                     likesNumber={item.likesNumber}
                     CommentsNumber={item.commentsNumber}
                     postKey={item.postKey}
+                    navigation = {this.props.navigation}
+                    communityKey =  '-M07uNj9HbQxc_ich644'/*{this.props.navigation.getParam("communityKey")}*/
                 />
             </View>
         )
         return(
             <View style={{ borderWidth: 1, borderColor: 'blue', flex: 1 }}>
-                <View style={styles.communityBgImgContainer}>
-                    <SearchBar
-                        lightTheme
-                        containerStyle={{ backgroundColor: '#FFF' }}
-                        inputContainerStyle={{ backgroundColor: '#DDD' }}
-                        placeholder="Search a Member"
-                        value={this.state.search}
-                        onChangeText ={
-                            alert('search')
-                        } 
-                    />
-                </View>
+                
                 <View style={{ borderWidth: 1, borderColor: 'red', flex: 1 }}>
-                    <View>
+                <View>
                         <FlatList
                             style={{ padding: 6, borderWidth: 1,borderColor: 'orange', marginTop: 5, marginBottom: 120}}
-                            data={this.state.postsList}
-                            keyExtractor={(item) => item.key}
+                            data={this.state.posts}
+                            keyExtractor={(item) => item.id}
                             renderItem={({ item }) => renderPost(item)}
                         />
                     </View>

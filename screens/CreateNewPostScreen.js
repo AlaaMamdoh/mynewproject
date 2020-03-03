@@ -35,7 +35,7 @@ export default class CreateNewPostScreen extends React.Component {
                 commentsNumber : 0,
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
             })
-            .then(this.props.navigation.navigate('CommunityOverView'))
+            .then(this.props.navigation.navigate('CommunityOverView' , {communityKey: this.props.navigation.getParam("communityKey")}))
             .catch(error => {
                 alert(error.toString())
                 return

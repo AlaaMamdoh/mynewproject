@@ -17,34 +17,18 @@ var firebaseConfig = {
 
 export default class CreateNewPostScreen extends React.Component {
     state = {
-        postTxt: this.props.navigation.getParam("postTxt"),
+        postTxt: this.props.navigation.getParam("postText"),
         postImg:'',
         imgPicked: false,
         postExist: false,
     }
-    submit = () =>{
-        if (this.state.postTxt === '' && this.state.postImg === ''){
-            this.props.navigation.navigate('CommunityOverView')
-        }else{
-            firebase.database().ref('posts').push({
-                communityKey : /*'-M0-eK5qPULnEK3entq8',*/this.props.navigation.getParam("communityKey"),
-                user : 'fHI1izTOJ5VeC7ZnjXUducickzj1'/* 'PCrBx38NcjZdsgmRS805sk7lgWn1' firebase.auth().currentUser || {}).uid */ ,
-                text : this.state.postTxt,
-                image : this.state.postImg,
-                likesNumber : 0,
-                commentsNumber : 0,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-            })
-            .then(this.props.navigation.navigate('CommunityOverView'))
-            .catch(error => {
-                alert(error.toString())
-                return
-            })
-        }
-    }
-    pickImage = () => {
-        _launchCameraRoll().then(res => this.setState({ postImg : res }))
-        this.setState(prevState => ({imgPicked: !prevState.imgPicked}))
+    edit = () =>{
+        firebase.database().ref(`posts/${this.props.navigation.getParam('postKey')}/text`).set(this.state.postTxt)
+        .then(this.props.navigation.navigate('CommunityOverView' , {communityKey: this.props.navigation.getParam("communityKey")}))
+        .catch(error => {
+            alert(error.toString())
+            return
+        })
     }
     render(){
         return(
@@ -75,7 +59,7 @@ export default class CreateNewPostScreen extends React.Component {
                         <Icon name='camera' type='font-awesome' size={25} color='#555'  />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.submitBtn} onPress={this.submit}>
+                <TouchableOpacity style={styles.submitBtn} onPress={this.edit}>
                     <Text style={styles.submitBtnTxt}>Edit</Text>
                 </TouchableOpacity>
             </View>
