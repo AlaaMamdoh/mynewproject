@@ -79,12 +79,8 @@ export default class CreateCommunityScreen extends React.Component {
         );
         if(indexm === -1){
             this.setState({ choosenMembers: [...this.state.choosenMembers, { name: member.name, id: member.key }] })
-        }else{
-            this.state.choosenMembers.splice(indexm, 1)
         }
-        
-        
-
+        else{this.state.choosenMembers.splice(indexm, 1)}
     }
     createCommunity = () => {
         
@@ -101,8 +97,8 @@ export default class CreateCommunityScreen extends React.Component {
                     name: choosenMember.name,
                     key: choosenMember.id
                 })
-            })}
-        )
+            })
+        })
         .then(() =>{this.props.navigation.navigate('CommunityOverView', { communityKey: this.state.key }) } )
         .catch(error => {
             alert(error.toString())

@@ -170,7 +170,7 @@ export default class Post extends React.Component {
     editComment = () => {
         firebase.database()
         .ref(`posts/${this.props.postKey}/comments/${this.state.editCommentKey}`)
-        .on('value', snapshot =>{
+        .once('value', snapshot =>{
             if (this.state.editComment === snapshot.val().commentTxt){
                 this.setState({editCommentModalVisible: false})
             }
@@ -184,7 +184,7 @@ export default class Post extends React.Component {
     }
     deleteComment = (item) => {
         firebase.database().ref('posts').child(this.props.postKey/*'-M0IviCqMGE_PxoqNd0W'*/)
-        .on('value', snap => {this.makeCommentIncrement =  snap.val().commentsNumber})
+        .once('value', snap => {this.makeCommentIncrement =  snap.val().commentsNumber})
         this.makeCommentIncrement= this.makeCommentIncrement-1
         firebase.database().ref(`posts/${this.props.postKey}/commentsNumber`).set(this.makeCommentIncrement)
         firebase.database().ref(`posts/${this.props.postKey}/comments/${item.commentKey}`).remove()

@@ -32,7 +32,7 @@ export default class CreateCommunityScreen extends React.Component {
     
     listenForCommunityAndPosts = () =>  {
         firebase.database().ref('posts').orderByChild('communityKey')
-        .equalTo('-M0lO8LPYwPdDsdrSvMJ')
+        .equalTo('-M0lO8LPYwPdDsdrSvMJ'/*this.props.navigation.getParam("communityKey") */)
         .on('value', (dataSnapshot) =>{
             let promises = [];
             dataSnapshot.forEach((child) => {
@@ -109,7 +109,7 @@ export default class CreateCommunityScreen extends React.Component {
                         />
                     </View>
                 </View>
-                <TouchableOpacity onPress={() => {this.props.navigation.navigate('CreateNewPost', {communityKey: '-M07uNj9HbQxc_ich644'/*this.props.navigation.getParam("communityKey")*/})}} style={{hight:40,width:40,borderRadius:40,position: 'absolute', bottom: 20, left: 0, right: 0,}}>
+                <TouchableOpacity onPress={() => {this.props.navigation.navigate('CreateNewPost', {communityKey: '-M0lO8LPYwPdDsdrSvMJ'/*this.props.navigation.getParam("communityKey")*/})}} style={{hight:40,width:40,borderRadius:40,position: 'absolute', bottom: 20, left: 0, right: 0,}}>
                     <Icon name='plus' type='font-awesome' size={30} color='#fff' style={{}} />
                 </TouchableOpacity>
             </View>

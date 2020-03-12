@@ -27,7 +27,7 @@ export default class CreateNewPostScreen extends React.Component {
             this.props.navigation.navigate('CommunityOverView')
         }else{
             firebase.database().ref('posts').push({
-                communityKey : /*'-M0-eK5qPULnEK3entq8',*/this.props.navigation.getParam("communityKey"),
+                communityKey :'-M0kRWloxD5VMaovO6Ky', /*'-M0kRWloxD5VMaovO6Ky''-M0-eK5qPULnEK3entq8',*///this.props.navigation.getParam("communityKey"),
                 user : 'fHI1izTOJ5VeC7ZnjXUducickzj1'/* 'PCrBx38NcjZdsgmRS805sk7lgWn1' firebase.auth().currentUser || {}).uid */ ,
                 text : this.state.postTxt,
                 image : this.state.postImg,

@@ -19,7 +19,7 @@ const AppNavigator = createStackNavigator(
         //CommunitesListS:CommunitesList,
         //Rooms : StackRooms,
         //AddMembers : AddMembersScreen,
-        //CreateCommunity : CreateCommunityScreen,
+        CreateCommunity : CreateCommunityScreen,
         //NewsFeed: NewsFeedScreen,
         CommunityOverView : CommunityOverViewScreen,
         CreateNewPost : CreateNewPostScreen,
